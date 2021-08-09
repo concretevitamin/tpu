@@ -12,7 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Train a ResNet-50 model on ImageNet on TPU."""
+"""Train a ResNet-50 model on ImageNet on TPU.
+
+export TPU_NAME=resnet-tutorial
+export DATA_DIR=gs://imagenet_test_mluo/imagenet
+
+# Train.
+python3 official/resnet/resnet_main.py \
+  --mode=train \
+  --tpu=$TPU_NAME \
+  --data_dir=$DATA_DIR \
+  --model_dir=gs://resnet-test/resnet-realImagenet \
+  --train_batch_size=1024 \
+  --iterations_per_loop=1251 \
+  --train_steps=112590 2>&1 | tee run-realData.log
+
+# Train, float32.
+python3 official/resnet/resnet_main.py \
+  --precision=float32 \
+  --mode=train \
+  --tpu=$TPU_NAME \
+  --data_dir=$DATA_DIR \
+  --model_dir=gs://resnet-test/resnet-realImagenet-float32 \
+  --train_batch_size=1024 \
+  --iterations_per_loop=1251 \
+  --train_steps=112590 2>&1 | tee run-realData-float32.log
+
+# Eval.  Use eval_batch_size=1000 to evaluate all 50K val images.
+python3 official/resnet/resnet_main.py \
+  --mode=eval \
+  --eval_batch_size=1000 \
+  --tpu=$TPU_NAME \
+  --data_dir=$DATA_DIR \
+  --model_dir=gs://resnet-test/resnet-realImagenet \
+  --train_batch_size=1024 \
+  --iterations_per_loop=1251 \
+  --train_steps=112590 2>&1 | tee run-realData-eval.log
+
+"""
 
 from __future__ import absolute_import
 from __future__ import division
