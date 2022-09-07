@@ -656,7 +656,7 @@ def resnet_model_fn(features, labels, mode, params):
       train_op=train_op,
       host_call=host_call,
       eval_metrics=eval_metrics,
-      scaffold_fn=scaffold_fn)
+      scaffold=scaffold_fn)
 
 
 def _verify_non_empty_string(value, field_name):
